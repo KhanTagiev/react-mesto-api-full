@@ -68,9 +68,8 @@ class Api {
 }
 
 const api = new Api({
-  url: "https://mesto.nomoreparties.co/v1/cohort-22",
+  url: "https://api.domainname.khantagiev.nomoredomains.club",
   headers: {
-    authorization: "11e9f0e1-4daa-4439-a2bf-878699998a8c",
     "Content-Type": "application/json",
   },
 });
