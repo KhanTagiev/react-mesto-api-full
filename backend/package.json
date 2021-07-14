@@ -23,6 +23,7 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "lint": "npx eslint .",
-    "fix": "npx eslint . --fix"
+    "fix": "npx eslint . --fix",
+    "deploy": "scp -r ./* khan@178.154.198.147:/home/khan/mesto-frontend"
   }
 }
