@@ -16,6 +16,7 @@ const {
 const NotFoundError = require('./errors/not-found-err');
 
 const urlValidationMethod = require('./utils/url_valid_meth');
+const corsMiddleware = require('./middlewares/cors');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
@@ -24,6 +25,7 @@ const { PORT = 3000 } = process.env;
 
 mongoose.connect(MONGODB_URL, MONGODB_OPTIONS);
 
+app.use(corsMiddleware);
 app.use(requestLogger);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -68,5 +70,3 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
-
-module.exports = app;
