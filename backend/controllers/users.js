@@ -44,7 +44,7 @@ const login = async (req, res, next) => {
 
     const isPasswordCorrect = bcrypt.compareSync(password, user.password);
 
-    if (!isPasswordCorrect) { return next(new UnAuthErr('Переданы некорректные для авторизации')); }
+    if (!isPasswordCorrect) { return next(new UnAuthErr('Переданы некорректные данные для авторизации')); }
 
     const token = jwt.sign({ _id: user._id }, SECRET_CODE, { expiresIn: '7d' });
 
