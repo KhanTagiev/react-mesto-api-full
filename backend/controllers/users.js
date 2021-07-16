@@ -59,6 +59,14 @@ const login = async (req, res, next) => {
   } catch (err) { return next(err); }
 };
 
+const logout = async (req, res, next) => {
+  try {
+    res.clearCookie();
+
+    return res.status(OK_CODE).send();
+  } catch (err) { return next(err); }
+};
+
 const createUser = async (req, res, next) => {
   try {
     const {
@@ -135,6 +143,7 @@ module.exports = {
   getUserId,
   getMeProfile,
   login,
+  logout,
   createUser,
   updateUserProfile,
   updateUserAvatar,

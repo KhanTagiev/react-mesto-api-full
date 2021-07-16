@@ -3,7 +3,7 @@ const { celebrate, Joi } = require('celebrate');
 
 const authMiddleware = require('../middlewares/auth');
 const {
-  getUsers, getUserId, getMeProfile, updateUserProfile, updateUserAvatar,
+  getUsers, getUserId, logout, getMeProfile, updateUserProfile, updateUserAvatar,
 } = require('../controllers/users');
 
 const urlValidationMethod = require('../utils/url_valid_meth');
@@ -11,6 +11,8 @@ const urlValidationMethod = require('../utils/url_valid_meth');
 userRouter.get('/users', authMiddleware, getUsers);
 
 userRouter.get('/users/me', authMiddleware, getMeProfile);
+
+userRouter.get('/users/me/logout', authMiddleware, logout);
 
 userRouter.get('/users/:userId', [celebrate({
   params: Joi.object().keys({
