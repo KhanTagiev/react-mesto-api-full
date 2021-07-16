@@ -61,7 +61,11 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    res.clearCookie('jwt');
+    res.clearCookie('jwt', {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true
+    });
 
     return res.status(OK_CODE).send('Токен удален');
   } catch (err) { return next(err); }
