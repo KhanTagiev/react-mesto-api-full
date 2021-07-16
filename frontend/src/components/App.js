@@ -211,13 +211,11 @@ function App() {
           setUserEmail(data.data.email);
           setLoggedIn(true);
           history.push("/");
+          console.log("Hy")
         })
         .catch((err) => {
-          localStorage.removeItem("jwt");
-          console.log(err);
+          console.log(err, 'hy');
         });
-
-
   }
 
   function handleRegister(email, password) {
