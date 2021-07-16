@@ -54,7 +54,7 @@ function App() {
         setCards(cards);
       })
       .catch((err) => console.log(err));
-  }, [loggedIn]);
+  }, []);
 
   React.useEffect(() => {
     if (profileFormValidator !== undefined) {
@@ -206,15 +206,16 @@ function App() {
   }
 
   function handleCheckToken() {
-    api.getUserInfo()
+      mestoAuth
+        .checkToken()
         .then((data) => {
           setUserEmail(data.data.email);
           setLoggedIn(true);
           history.push("/");
-          console.log("Hy")
         })
         .catch((err) => {
-          console.log(err, 'hy');
+          localStorage.removeItem("jwt");
+          console.log(err);
         });
   }
 

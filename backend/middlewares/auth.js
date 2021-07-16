@@ -7,10 +7,13 @@ module.exports = async (req, res, next) => {
   try {
     const token = req.cookies.jwt;
 
+    console.log(token)
+
+    }
     const payload = jwt.verify(token, SECRET_CODE);
 
     req.user = payload;
 
     return next();
-  } catch (err) { return next(new UnAuthErr('Ошибка при авторизации')); }
+  } catch (err) { return next(new UnAuthErr('Ошибка при авторизации', err)); }
 };
