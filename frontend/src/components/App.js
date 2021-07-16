@@ -54,7 +54,7 @@ function App() {
         setCards(cards);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [loggedIn]);
 
   React.useEffect(() => {
     if (profileFormValidator !== undefined) {
@@ -206,10 +206,7 @@ function App() {
   }
 
   function handleCheckToken() {
-    const jwt = localStorage.getItem("jwt");
-    if (jwt) {
-      mestoAuth
-        .checkToken(jwt)
+    api.getUserInfo()
         .then((data) => {
           setUserEmail(data.data.email);
           setLoggedIn(true);
@@ -219,7 +216,8 @@ function App() {
           localStorage.removeItem("jwt");
           console.log(err);
         });
-    }
+
+
   }
 
   function handleRegister(email, password) {
