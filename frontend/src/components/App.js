@@ -237,7 +237,6 @@ function App() {
     mestoAuth
       .authorize(email, password)
       .then((data) => {
-        localStorage.setItem("jwt", data.token);
         handleCheckToken();
       })
       .catch((err) => {
@@ -247,10 +246,18 @@ function App() {
   }
 
   function handleSignOut() {
-    localStorage.removeItem("jwt");
-    setLoggedIn(false);
-    setUserEmail("");
-    history.push("/sign-in");
+    mestoAuth
+      .logout()
+      .then((data) => {
+        setLoggedIn(false);
+        setUserEmail("");
+        history.push("/sign-in");
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+
+
   }
 
   return (

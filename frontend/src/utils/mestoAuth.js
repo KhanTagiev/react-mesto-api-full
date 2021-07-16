@@ -18,6 +18,7 @@ export const register = (email, password) => {
     body: JSON.stringify({ email, password }),
   }).then((res) => handleCheckResponse(res));
 };
+
 export const authorize = (email, password) => {
   return fetch(`${BASE_URL}/signin`, {
     method: "POST",
@@ -36,4 +37,20 @@ export const checkToken = () => {
     },
     credentials: "include"
   }).then((res) => handleCheckResponse(res));
+};
+
+export const logout= () => {
+  return fetch(`${BASE_URL}/users/me/logout`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include"
+  }).then((res) => {
+    if (res.ok) {
+      return res;
+    } else {
+      return Promise.reject(`Ошибка ${res.status}`);
+    }
+  });
 };
