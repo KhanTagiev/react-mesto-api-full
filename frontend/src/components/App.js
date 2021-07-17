@@ -48,13 +48,15 @@ function App() {
   }, []);
 
   React.useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getInitialCards()])
-      .then(([user, cards]) => {
-        setCurrentUser(user);
-        setCards(cards);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    if (loggedIn) {
+      Promise.all([api.getUserInfo(), api.getInitialCards()])
+        .then(([user, cards]) => {
+          setCurrentUser(user);
+          setCards(cards);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [loggedIn]);
 
   React.useEffect(() => {
     if (profileFormValidator !== undefined) {
@@ -226,6 +228,7 @@ function App() {
       .then((data) => {
         setStatus(true);
         setIsInfoTooltipPopupOpen(true);
+        history.push("/signin");
       })
       .catch((err) => {
         setStatus(false);
