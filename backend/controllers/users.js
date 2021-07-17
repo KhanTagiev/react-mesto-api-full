@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
 const { OK_CODE, SECRET_CODE } = require('../utils/constants');
 
 const NotFoundError = require('../errors/not-found-err');
@@ -44,16 +45,30 @@ const login = async (req, res, next) => {
 
     const isPasswordCorrect = bcrypt.compareSync(password, user.password);
 
-    if (!isPasswordCorrect) { return next(new UnAuthErr('Переданы некорректные для авторизации')); }
+    if (!isPasswordCorrect) { return next(new UnAuthErr('Переданы некорректные данные для авторизации')); }
 
-    const token = jwt.sign({ _id: user._id }, SECRET_CODE, { expiresIn: '7d' });
+    const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : SECRET_CODE, { expiresIn: '7d' });
 
     res.cookie('jwt', token, {
       maxAge: 10080000,
       httpOnly: true,
+      sameSite: 'none',
+      secure: true,
     });
 
     return res.status(OK_CODE).send({ token });
+  } catch (err) { return next(err); }
+};
+
+const logout = async (req, res, next) => {
+  try {
+    res.clearCookie('jwt', {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    });
+
+    return res.status(OK_CODE).send('Токен удален');
   } catch (err) { return next(err); }
 };
 
@@ -133,6 +148,7 @@ module.exports = {
   getUserId,
   getMeProfile,
   login,
+  logout,
   createUser,
   updateUserProfile,
   updateUserAvatar,

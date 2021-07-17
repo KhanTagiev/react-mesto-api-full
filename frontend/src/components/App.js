@@ -48,13 +48,15 @@ function App() {
   }, []);
 
   React.useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getInitialCards()])
-      .then(([user, cards]) => {
-        setCurrentUser(user);
-        setCards(cards);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    if (loggedIn) {
+      Promise.all([api.getUserInfo(), api.getInitialCards()])
+        .then(([user, cards]) => {
+          setCurrentUser(user);
+          setCards(cards);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [loggedIn]);
 
   React.useEffect(() => {
     if (profileFormValidator !== undefined) {
@@ -153,7 +155,7 @@ function App() {
   }
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i === currentUser._id);
     api
       .changeLikeCardStatus(card, isLiked)
       .then((newCard) => {
@@ -196,6 +198,8 @@ function App() {
   }
 
   function handleCardDeleteSubmit(card) {
+
+    console.log(selectedCard)
     api
       .deleteCard(card)
       .then(() => {
@@ -206,20 +210,16 @@ function App() {
   }
 
   function handleCheckToken() {
-    const jwt = localStorage.getItem("jwt");
-    if (jwt) {
       mestoAuth
-        .checkToken(jwt)
+        .checkToken()
         .then((data) => {
-          setUserEmail(data.data.email);
+          setUserEmail(data.email);
           setLoggedIn(true);
           history.push("/");
         })
         .catch((err) => {
-          localStorage.removeItem("jwt");
           console.log(err);
         });
-    }
   }
 
   function handleRegister(email, password) {
@@ -228,6 +228,7 @@ function App() {
       .then((data) => {
         setStatus(true);
         setIsInfoTooltipPopupOpen(true);
+        history.push("/signin");
       })
       .catch((err) => {
         setStatus(false);
@@ -239,7 +240,6 @@ function App() {
     mestoAuth
       .authorize(email, password)
       .then((data) => {
-        localStorage.setItem("jwt", data.token);
         handleCheckToken();
       })
       .catch((err) => {
@@ -249,10 +249,18 @@ function App() {
   }
 
   function handleSignOut() {
-    localStorage.removeItem("jwt");
-    setLoggedIn(false);
-    setUserEmail("");
-    history.push("/sign-in");
+    mestoAuth
+      .logout()
+      .then((data) => {
+        setLoggedIn(false);
+        setUserEmail("");
+        history.push("/sign-in");
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+
+
   }
 
   return (

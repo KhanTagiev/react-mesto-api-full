@@ -16,14 +16,18 @@ const {
 const NotFoundError = require('./errors/not-found-err');
 
 const urlValidationMethod = require('./utils/url_valid_meth');
+const corsMiddleware = require('./middlewares/cors');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+
+require('dotenv').config();
 
 const app = express();
 const { PORT = 3000 } = process.env;
 
 mongoose.connect(MONGODB_URL, MONGODB_OPTIONS);
 
+app.use(corsMiddleware);
 app.use(requestLogger);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -31,6 +35,12 @@ app.use(cookieParser());
 
 app.use('/', userRoutes);
 app.use('/', cardRoutes);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
