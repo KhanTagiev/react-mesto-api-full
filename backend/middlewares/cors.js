@@ -19,10 +19,10 @@ const corsMiddleware = (req, res, next) => {
   if (method === 'OPTIONS') {
     res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
     res.header('Access-Control-Allow-Headers', requestHeaders);
-    res.status(200).send()
-    return
+    res.status(200).send();
+    return;
   }
   next();
 };
 
-module.exports = corsMiddleware
+module.exports = corsMiddleware;

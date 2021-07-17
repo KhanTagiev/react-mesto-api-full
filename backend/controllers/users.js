@@ -10,7 +10,6 @@ const UnAuthErr = require('../errors/un_auth_err');
 const BadReqErr = require('../errors/bad-req-err');
 const ConflictErr = require('../errors/conflict-err');
 
-
 const getUsers = async (req, res, next) => {
   try {
     return res.status(OK_CODE).send(await User.find({}));
@@ -54,7 +53,7 @@ const login = async (req, res, next) => {
       maxAge: 10080000,
       httpOnly: true,
       sameSite: 'none',
-      secure: true
+      secure: true,
     });
 
     return res.status(OK_CODE).send({ token });
@@ -66,7 +65,7 @@ const logout = async (req, res, next) => {
     res.clearCookie('jwt', {
       httpOnly: true,
       sameSite: 'none',
-      secure: true
+      secure: true,
     });
 
     return res.status(OK_CODE).send('Токен удален');
